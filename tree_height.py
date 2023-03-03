@@ -6,49 +6,54 @@ import numpy
 
 
 def compute_height(n, parents):
-    tree = [[]for i in range(n)]
-    root = None
+    nodes = [[]for i in range(n)]
     for i in range(n):
-        if parents[i] == 1:
+        if parents[i] == -1:
             root = i
         else:
-            tree[parents[i]].append(i)
+            nodes[parents[i]].append(i)
 
-    def height(v):
-        if len(tree[v]) == 0:
-            return 1
-        else:
-            return 1 + max([height(child) for child in tree[v]])
-        
-    return height(root)
+    height = 0
+    q = [root]
+    while q:
+        height += 1
+        next_level = []
+        for v in q:
+            next_level += nodes[v]
+        q = next_level
+    return height
 
 
 def main():
-    # implement input form keyboard and from files
-    input_type = input("Enter 'i' to input from keyboard or 'f' to input from file: ")
-    while input_type.lower() not in ['i', 'f']:
-        input_type = input("Invalid input. Enter 'i' to input from keyboard or 'f' to input from file: ")
 
-    # let user input file name to use, don't allow file names with letter a
-    if input_type.lower() == 'f':
-        filename = input("Enter input file name: ")
-        while 'a' in filename:
-            filename = input("Invalid file name. Enter input file name: ")
+    input_type = input("Enter 'I' to input from keyboard or 'F' to input from file: ")
+
+    if input_type == 'I':
+
+        n = int(input("Enter the number of nodes: "))
+        parents = list(map(int, input("Enter the parents of nodes seperated by space: ").split()))
+
+    elif input_type == 'F':
+
+        filename = input("Enter the name of the input file: ")
+        if 'a' in filename:
+            print("Invalid filename.")
+            return
         try:
-            with open('inputs/' + filename, 'r') as f:
+            with open(f'./{filename}', 'r') as f:
                 n = int(f.readline())
                 parents = list(map(int, f.readline().split()))
         except FileNotFoundError:
-            print("File not found.")
+            print("File not found. Please try again.")
             return
+        
     else:
-    # input number of elements
-    n = int(input("Enter the number of nodes in the tree: "))
+        print("Invalid input type. Please enter 'I' or 'F'. ")
+        return
 
-    # input values in one variable, separate with space, split these values in an array
-    parents = list(map(int, input("Enter the parents of each node seperated by spaces: ").split()))
+    height = compute_height(n, parents)
     # call the function and output it's result
-    print("The heigh of the tree is:", compute_height(n, parents))
+    print(height)
 
 # In Python, the default limit on recursion depth is rather low,
 # so raise it here for this problem. Note that to take advantage
