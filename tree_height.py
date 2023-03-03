@@ -14,46 +14,42 @@ def compute_height(n, parents):
             nodes[parents[i]].append(i)
 
     height = 0
-    q = [root]
-    while q:
-        height += 1
-        next_level = []
-        for v in q:
-            next_level += nodes[v]
-        q = next_level
+    stack = [(root, 1)]
+    while stack:
+        node, level = stack.pop()
+        height = max(height, level)
+        for child in nodes[node]:
+            stack.append((child, level+1))
     return height
 
 
 def main():
 
-    input_type = input("Enter 'I' to input from keyboard or 'F' to input from file: ")
+    input_type = input("Enter 'I' to input from keyboard or 'F' to input from file: ").lower()
+    while input_type not in ['i', 'f']:
+        print("Invalid input type. Please enter I or F")
+        input_type = input("Enter 'I' to input from keyboard or 'F' to input from file: ").lower()
 
-    if input_type == 'I':
-
-        n = int(input("Enter the number of nodes: "))
-        parents = list(map(int, input("Enter the parents of nodes seperated by space: ").split()))
-
-    elif input_type == 'F':
-
-        filename = input("Enter the name of the input file: ")
-        if 'a' in filename:
-            print("Invalid filename.")
-            return
+    if input_type == 'i':
+        n = int(input())
+        parents = list(map(int, input().split()))
+    else:
+        filename = input("Enter input file name: ")
+        while 'a' in filename:
+            print("Invalid file name. Please try again.")
+            filename = input("Enter input file name: ")
         try:
-            with open(f'./{filename}', 'r') as f:
+            with open(f"folder/{filename}", 'r') as f:
                 n = int(f.readline())
-                parents = list(map(int, f.readline().split()))
+                parents = list(map(int, f.readline.split())))
         except FileNotFoundError:
             print("File not found. Please try again.")
             return
         
-    else:
-        print("Invalid input type. Please enter 'I' or 'F'. ")
-        return
 
-    height = compute_height(n, parents)
-    # call the function and output it's result
-    print(height)
+    tree_height = compute_height(n, parents)
+
+    print(tree_height)
 
 # In Python, the default limit on recursion depth is rather low,
 # so raise it here for this problem. Note that to take advantage
