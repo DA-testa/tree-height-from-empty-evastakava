@@ -21,7 +21,7 @@ def compute_height(n, parents):
         node, height = queue.pop(0)
         max_height = max(max_height, height)
         for child in tree[node]:
-            q.append((child, height + 1))
+            queue.append((child, height + 1))
     return max_height + 1
 
 def main():
