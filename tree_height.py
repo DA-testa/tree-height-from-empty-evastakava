@@ -1,46 +1,46 @@
 import sys
 import threading
-import numpy as np
+import numpy
 
 def compute_height(n, parents):
     tree = [[] for i in range (n)]
     for i, parent in enumerate(parents):
         if parent !=-1:
             tree[parent].append(i)
-    root = np.where(parents == -1)[0][0]
-    queue = [(root,0)]
+    root = numpy.where(parents == -1)[0][0]
+    q = [(root,0)]
     max_height = 0;
 
-    while queue:
-        node, height = queue.pop(0)
+    while q:
+        node, height = q.pop(0)
         max_height = max(max_height, height)
         for child in tree[node]:
-            queue.append((child, height+1))
+            q.append((child, height+1))
     return max_height+1
 
 def main():
     text = input("Enter 'I' for input from keyboard or 'F' for input from file: ")
     if text[0] == "I":
-        n = int(input("Enter number of nodes: "))
-        parents_str = input("Enter parent list separated by space: ")
-        parents = np.array(list(map(int, parents_str.split())))
+        n = int(input("Enter the number of nodes: "))
+        parents_str = input("Enter parent list: ")
+        parents = numpy.array(list(map(int, parents_str.split())))
         height = compute_height(n, parents)
     elif text[0] == "F":
         file_name = input("Enter file name: ")
         if "a" in file_name:
-            print("File name cannot contain letter 'a'.")
+            print("Error. In file name can't beletter 'a'.")
             return
         try:
             with open("folder/" + file_name, 'r') as file:
                 n = int(file.readline())
                 parents_str = file.readline().strip()
-                parents = np.array(list(map(int, parents_str.split())))
+                parents = numpy.array(list(map(int, parents_str.split())))
                 height = compute_height(n, parents)
         except FileNotFoundError:
-            print("File not found.")
+            print("Error. Try again.")
             return
     else:
-        print("Invalid input option.")
+        print("Invalid input name.")
         return
     print(height)
 
