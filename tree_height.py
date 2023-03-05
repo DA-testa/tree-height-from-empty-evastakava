@@ -8,6 +8,7 @@ import numpy
 def compute_height(n, parents):
 
     tree = [[]for i in range (n)]
+
     for i, parent in enumerate(parents):
         if parent != -1:
             tree[parent].append(i)
@@ -27,21 +28,28 @@ def main():
 
     input_type = input("Enter I to input from keyboard or F to input from file: ").upper()
     if input_type[0] == "I":
-        n = int(input())
-        parents1 = input()
-        parents = numpy.array(list(map(int, parents1.split())))
-        height = compute_height(n, parents)
+        n = int(input("Enter the number of nodes: "))
+        parents_input = input("Enter the parents array: ")
+        parents = numpy.array(list(map(int, parents_input.split())))
     elif input_type[0] == "F":
         filename = input("Enter file name: ")
         if 'a' in filename:
-            print("Error. Try again.")
+            print("Error. File name contains the letter 'a. Please try again.")
             return
-        with open(filename, 'r') as file:
-            n = int(file.readline())
-            parents1 = file.readline().strip()
-            parents = numpy.array(list(map(int, parents1.split())))
-            height = compute_height(n, parents)
-
+        try:
+            with open(filename, 'r') as file:
+                n = int(file.readline())
+                parents_input = file.readline().strip()
+                parents = numpy.array(list(map(int, parents_input.split())))
+        except:
+            print("Error. Could not open file.")
+            return
+    else:
+        print("Error: Invalid file name")
+        return
+    
+    height = compute_height(n, parents)
+    
     print(height)
 sys.setrecursionlimit(10**7)  # max depth of recursion
 threading.stack_size(2**27)   # new thread will get stack of such size
